@@ -1,0 +1,7 @@
+## Append samples of your project ##
+resources:
+- infrastructure_v1alpha1_safcluster.yaml
+- infrastructure_v1alpha1_safclustertemplate.yaml
+- infrastructure_v1alpha1_safmachine.yaml
+- infrastructure_v1alpha1_safmachinetemplate.yaml
+# +kubebuilder:scaffold:manifestskustomizesamples

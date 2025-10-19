@@ -1,0 +1,9 @@
+apiVersion: infrastructure.saf-api.io/v1alpha1
+kind: SAFCluster
+metadata:
+  labels:
+    app.kubernetes.io/name: saf-api
+    app.kubernetes.io/managed-by: kustomize
+  name: safcluster-sample
+spec:
+  # TODO(user): Add fields here

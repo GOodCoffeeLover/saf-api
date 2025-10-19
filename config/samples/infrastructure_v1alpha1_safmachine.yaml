@@ -1,0 +1,9 @@
+apiVersion: infrastructure.saf-api.io/v1alpha1
+kind: SAFMachine
+metadata:
+  labels:
+    app.kubernetes.io/name: saf-api
+    app.kubernetes.io/managed-by: kustomize
+  name: safmachine-sample
+spec:
+  # TODO(user): Add fields here
