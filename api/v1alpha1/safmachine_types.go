@@ -26,7 +26,13 @@ import (
 // SAFMachineSpec defines the desired state of SAFMachine
 type SAFMachineSpec struct {
 	// +optional
-	Address *string `json:"address,omitempty"`
+	ConnectionConfig *ConnectionConfig `json:"connectionConfig,omitempty"`
+}
+
+type ConnectionConfig struct {
+	Address  string `json:"address"`
+	User     string `json:"user"`
+	Password string `json:"password"`
 }
 
 // SAFMachineStatus defines the observed state of SAFMachine.

@@ -18,13 +18,19 @@ package controller
 
 import (
 	"context"
+	"fmt"
 
+	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/utils/ptr"
+	"sigs.k8s.io/cluster-api/util"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 
 	infrastructurev1alpha1 "github.com/GoodCoffeeLover/saf-api/api/v1alpha1"
+	"github.com/GoodCoffeeLover/saf-api/internal/provisioning"
 )
 
 // SAFMachineReconciler reconciles a SAFMachine object
@@ -33,31 +39,63 @@ type SAFMachineReconciler struct {
 	Scheme *runtime.Scheme
 }
 
-// +kubebuilder:rbac:groups=infrastructure.saf-api.io,resources=safmachines,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=infrastructure.saf-api.io,resources=safmachines/status,verbs=get;update;patch
-// +kubebuilder:rbac:groups=infrastructure.saf-api.io,resources=safmachines/finalizers,verbs=update
-
-// Reconcile is part of the main kubernetes reconciliation loop which aims to
-// move the current state of the cluster closer to the desired state.
-// TODO(user): Modify the Reconcile function to compare the state specified by
-// the SAFMachine object against the actual cluster state, and then
-// perform operations to make the cluster state reflect the state specified by
-// the user.
-//
-// For more details, check Reconcile and its Result here:
-// - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.22.1/pkg/reconcile
-func (r *SAFMachineReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	_ = logf.FromContext(ctx)
-
-	// TODO(user): your logic here
-
-	return ctrl.Result{}, nil
-}
-
 // SetupWithManager sets up the controller with the Manager.
 func (r *SAFMachineReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&infrastructurev1alpha1.SAFMachine{}).
 		Named("safmachine").
 		Complete(r)
+}
+
+// +kubebuilder:rbac:groups=infrastructure.saf-api.io,resources=safmachines,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=infrastructure.saf-api.io,resources=safmachines/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=infrastructure.saf-api.io,resources=safmachines/finalizers,verbs=update
+
+// Reconcile is part of the main kubernetes reconciliation loop which aims to
+// move the current state of the cluster closer to the desired state.
+func (r *SAFMachineReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
+	_ = logf.FromContext(ctx)
+
+	safm := &infrastructurev1alpha1.SAFMachine{}
+	if err := r.Get(ctx, req.NamespacedName, safm); err != nil {
+		return ctrl.Result{}, client.IgnoreNotFound(fmt.Errorf("get saf machine: %w", err))
+	}
+
+	ma, err := util.GetOwnerMachine(ctx, r.Client, safm.ObjectMeta)
+	if err != nil {
+		return ctrl.Result{}, fmt.Errorf("get owner machine: %w", err)
+	}
+	if ma == nil {
+		return ctrl.Result{}, nil
+	}
+
+	if ma.Spec.Bootstrap.DataSecretName == nil {
+		return ctrl.Result{}, nil
+	}
+
+	btsrpSecret := &v1.Secret{}
+	secretKety := types.NamespacedName{
+		Name:      ptr.Deref(ma.Spec.Bootstrap.DataSecretName, ""),
+		Namespace: ma.Namespace,
+	}
+	if err := r.Get(ctx, secretKety, btsrpSecret); err != nil {
+		return ctrl.Result{}, fmt.Errorf("get bootstrap secret: %w", err)
+	}
+	btsrpData := btsrpSecret.Data["value"]
+	commands, err := provisioning.RawCloudInitToProvisioningCommands(btsrpData)
+	if err != nil {
+		return ctrl.Result{}, fmt.Errorf("parse bootstrap data: %w", err)
+	}
+
+	err = execBootsrap(commands)
+
+	return ctrl.Result{}, err
+}
+
+func parseBootstrapData(data []byte) string {
+	return ""
+}
+
+func execBootsrap(commands []provisioning.Cmd) error {
+	return nil
 }

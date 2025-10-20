@@ -70,10 +70,19 @@ spec:
                   spec:
                     description: SAFMachineSpec defines the desired state of SAFMachine
                     properties:
-                      foo:
-                        description: foo is an example field of SAFMachine. Edit safmachine_types.go
-                          to remove/update
-                        type: string
+                      connectionConfig:
+                        properties:
+                          address:
+                            type: string
+                          password:
+                            type: string
+                          user:
+                            type: string
+                        required:
+                        - address
+                        - password
+                        - user
+                        type: object
                     type: object
                 required:
                 - spec
