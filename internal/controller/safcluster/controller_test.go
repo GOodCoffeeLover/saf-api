@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package controller
+package safcluster_test
 
 import (
 	"context"
@@ -28,6 +28,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	infrastructurev1alpha1 "github.com/GoodCoffeeLover/saf-api/api/v1alpha1"
+	"github.com/GoodCoffeeLover/saf-api/internal/controller/safcluster"
 )
 
 var _ = Describe("SAFCluster Controller", func() {
@@ -40,11 +41,11 @@ var _ = Describe("SAFCluster Controller", func() {
 			Name:      resourceName,
 			Namespace: "default", // TODO(user):Modify as needed
 		}
-		safcluster := &infrastructurev1alpha1.SAFCluster{}
+		safcl := &infrastructurev1alpha1.SAFCluster{}
 
 		BeforeEach(func() {
 			By("creating the custom resource for the Kind SAFCluster")
-			err := k8sClient.Get(ctx, typeNamespacedName, safcluster)
+			err := k8sClient.Get(ctx, typeNamespacedName, safcl)
 			if err != nil && errors.IsNotFound(err) {
 				resource := &infrastructurev1alpha1.SAFCluster{
 					ObjectMeta: metav1.ObjectMeta{
@@ -68,7 +69,7 @@ var _ = Describe("SAFCluster Controller", func() {
 		})
 		It("should successfully reconcile the resource", func() {
 			By("Reconciling the created resource")
-			controllerReconciler := &SAFClusterReconciler{
+			controllerReconciler := &safcluster.Reconciler{
 				Client: k8sClient,
 				Scheme: k8sClient.Scheme(),
 			}

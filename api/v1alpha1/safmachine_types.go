@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	v1 "k8s.io/api/batch/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -26,13 +27,14 @@ import (
 // SAFMachineSpec defines the desired state of SAFMachine
 type SAFMachineSpec struct {
 	// +optional
-	ConnectionConfig *ConnectionConfig `json:"connectionConfig,omitempty"`
+	ConnectionConfig map[string]string `json:"connection_config,omitempty,omitzero"`
+
+	ProvisionJob   JobTemplate `json:"provision_job"`
+	DeprovisionJob JobTemplate `json:"deprovision_job"`
 }
 
-type ConnectionConfig struct {
-	Address  string `json:"address"`
-	User     string `json:"user"`
-	Password string `json:"password"`
+type JobTemplate struct {
+	Spec v1.JobSpec `json:"spec"`
 }
 
 // SAFMachineStatus defines the observed state of SAFMachine.

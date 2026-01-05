@@ -14,33 +14,29 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package controller
+package safmachine
 
 import (
 	"context"
 	"fmt"
 
-	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/apimachinery/pkg/types"
-	"k8s.io/utils/ptr"
 	"sigs.k8s.io/cluster-api/util"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 
 	infrastructurev1alpha1 "github.com/GoodCoffeeLover/saf-api/api/v1alpha1"
-	"github.com/GoodCoffeeLover/saf-api/internal/provisioning"
 )
 
-// SAFMachineReconciler reconciles a SAFMachine object
-type SAFMachineReconciler struct {
+// Reconciler reconciles a SAFMachine object
+type Reconciler struct {
 	client.Client
 	Scheme *runtime.Scheme
 }
 
 // SetupWithManager sets up the controller with the Manager.
-func (r *SAFMachineReconciler) SetupWithManager(mgr ctrl.Manager) error {
+func (r *Reconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&infrastructurev1alpha1.SAFMachine{}).
 		Named("safmachine").
@@ -53,7 +49,7 @@ func (r *SAFMachineReconciler) SetupWithManager(mgr ctrl.Manager) error {
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
-func (r *SAFMachineReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
+func (r *Reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	_ = logf.FromContext(ctx)
 
 	safm := &infrastructurev1alpha1.SAFMachine{}
@@ -65,37 +61,16 @@ func (r *SAFMachineReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 	if err != nil {
 		return ctrl.Result{}, fmt.Errorf("get owner machine: %w", err)
 	}
+
 	if ma == nil {
+		// will requeue on update
 		return ctrl.Result{}, nil
 	}
 
 	if ma.Spec.Bootstrap.DataSecretName == nil {
+		// will requeue on update
 		return ctrl.Result{}, nil
 	}
 
-	btsrpSecret := &v1.Secret{}
-	secretKety := types.NamespacedName{
-		Name:      ptr.Deref(ma.Spec.Bootstrap.DataSecretName, ""),
-		Namespace: ma.Namespace,
-	}
-	if err := r.Get(ctx, secretKety, btsrpSecret); err != nil {
-		return ctrl.Result{}, fmt.Errorf("get bootstrap secret: %w", err)
-	}
-	btsrpData := btsrpSecret.Data["value"]
-	commands, err := provisioning.RawCloudInitToProvisioningCommands(btsrpData)
-	if err != nil {
-		return ctrl.Result{}, fmt.Errorf("parse bootstrap data: %w", err)
-	}
-
-	err = execBootsrap(commands)
-
 	return ctrl.Result{}, err
-}
-
-func parseBootstrapData(data []byte) string {
-	return ""
-}
-
-func execBootsrap(commands []provisioning.Cmd) error {
-	return nil
 }

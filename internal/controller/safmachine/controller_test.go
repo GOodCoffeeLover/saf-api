@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package controller
+package safmachine_test
 
 import (
 	"context"
@@ -28,6 +28,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	infrastructurev1alpha1 "github.com/GoodCoffeeLover/saf-api/api/v1alpha1"
+	"github.com/GoodCoffeeLover/saf-api/internal/controller/safmachine"
 )
 
 var _ = Describe("SAFMachine Controller", func() {
@@ -40,11 +41,11 @@ var _ = Describe("SAFMachine Controller", func() {
 			Name:      resourceName,
 			Namespace: "default", // TODO(user):Modify as needed
 		}
-		safmachine := &infrastructurev1alpha1.SAFMachine{}
+		safma := &infrastructurev1alpha1.SAFMachine{}
 
 		BeforeEach(func() {
 			By("creating the custom resource for the Kind SAFMachine")
-			err := k8sClient.Get(ctx, typeNamespacedName, safmachine)
+			err := k8sClient.Get(ctx, typeNamespacedName, safma)
 			if err != nil && errors.IsNotFound(err) {
 				resource := &infrastructurev1alpha1.SAFMachine{
 					ObjectMeta: metav1.ObjectMeta{
@@ -68,7 +69,7 @@ var _ = Describe("SAFMachine Controller", func() {
 		})
 		It("should successfully reconcile the resource", func() {
 			By("Reconciling the created resource")
-			controllerReconciler := &SAFMachineReconciler{
+			controllerReconciler := &safmachine.Reconciler{
 				Client: k8sClient,
 				Scheme: k8sClient.Scheme(),
 			}

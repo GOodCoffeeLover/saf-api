@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package controller
+package safcluster
 
 import (
 	"context"
@@ -27,8 +27,8 @@ import (
 	infrastructurev1alpha1 "github.com/GoodCoffeeLover/saf-api/api/v1alpha1"
 )
 
-// SAFClusterReconciler reconciles a SAFCluster object
-type SAFClusterReconciler struct {
+// Reconciler reconciles a SAFCluster object
+type Reconciler struct {
 	client.Client
 	Scheme *runtime.Scheme
 }
@@ -46,7 +46,7 @@ type SAFClusterReconciler struct {
 //
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.22.1/pkg/reconcile
-func (r *SAFClusterReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
+func (r *Reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	_ = logf.FromContext(ctx)
 
 	// TODO(user): your logic here
@@ -55,7 +55,7 @@ func (r *SAFClusterReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 }
 
 // SetupWithManager sets up the controller with the Manager.
-func (r *SAFClusterReconciler) SetupWithManager(mgr ctrl.Manager) error {
+func (r *Reconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&infrastructurev1alpha1.SAFCluster{}).
 		Named("safcluster").

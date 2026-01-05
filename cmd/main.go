@@ -36,7 +36,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 
 	infrastructurev1alpha1 "github.com/GoodCoffeeLover/saf-api/api/v1alpha1"
-	"github.com/GoodCoffeeLover/saf-api/internal/controller"
+	"github.com/GoodCoffeeLover/saf-api/internal/controller/safcluster"
+	"github.com/GoodCoffeeLover/saf-api/internal/controller/safmachine"
 	// +kubebuilder:scaffold:imports
 )
 
@@ -178,14 +179,14 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err := (&controller.SAFClusterReconciler{
+	if err := (&safcluster.Reconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "SAFCluster")
 		os.Exit(1)
 	}
-	if err := (&controller.SAFMachineReconciler{
+	if err := (&safmachine.Reconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
