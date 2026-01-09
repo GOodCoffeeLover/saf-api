@@ -21,13 +21,14 @@ import (
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+	batchv1 "k8s.io/api/batch/v1"
+	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-
-	infrastructurev1alpha1 "github.com/GoodCoffeeLover/saf-api/api/v1alpha1"
+	"github.com/GoodCoffeeLover/saf-api/api/v1alpha1"
 	"github.com/GoodCoffeeLover/saf-api/internal/controller/safmachine"
 )
 
@@ -41,16 +42,46 @@ var _ = Describe("SAFMachine Controller", func() {
 			Name:      resourceName,
 			Namespace: "default", // TODO(user):Modify as needed
 		}
-		safma := &infrastructurev1alpha1.SAFMachine{}
+		safma := &v1alpha1.SAFMachine{}
 
 		BeforeEach(func() {
 			By("creating the custom resource for the Kind SAFMachine")
 			err := k8sClient.Get(ctx, typeNamespacedName, safma)
 			if err != nil && errors.IsNotFound(err) {
-				resource := &infrastructurev1alpha1.SAFMachine{
+				resource := &v1alpha1.SAFMachine{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      resourceName,
 						Namespace: "default",
+					},
+					Spec: v1alpha1.SAFMachineSpec{
+						ProvisionJob: v1alpha1.JobTemplate{
+							Spec: batchv1.JobSpec{
+								Template: corev1.PodTemplateSpec{
+									Spec: corev1.PodSpec{
+										Containers: []corev1.Container{
+											{
+												Name:  "main",
+												Image: "main",
+											},
+										},
+									},
+								},
+							},
+						},
+						DeprovisionJob: v1alpha1.JobTemplate{
+							Spec: batchv1.JobSpec{
+								Template: corev1.PodTemplateSpec{
+									Spec: corev1.PodSpec{
+										Containers: []corev1.Container{
+											{
+												Name:  "main",
+												Image: "main",
+											},
+										},
+									},
+								},
+							},
+						},
 					},
 					// TODO(user): Specify other spec details if needed.
 				}
@@ -60,7 +91,7 @@ var _ = Describe("SAFMachine Controller", func() {
 
 		AfterEach(func() {
 			// TODO(user): Cleanup logic after each test, like removing the resource instance.
-			resource := &infrastructurev1alpha1.SAFMachine{}
+			resource := &v1alpha1.SAFMachine{}
 			err := k8sClient.Get(ctx, typeNamespacedName, resource)
 			Expect(err).NotTo(HaveOccurred())
 

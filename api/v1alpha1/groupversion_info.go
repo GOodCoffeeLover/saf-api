@@ -24,6 +24,11 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/scheme"
 )
 
+const (
+	SAFMachineKind = "SAFMachine"
+	SAFClusterKind = "SAFCluster"
+)
+
 var (
 	// GroupVersion is group version used to register these objects.
 	GroupVersion = schema.GroupVersion{Group: "infrastructure.saf-api.io", Version: "v1alpha1"}
