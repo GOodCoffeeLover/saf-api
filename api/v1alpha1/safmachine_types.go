@@ -27,10 +27,10 @@ import (
 // SAFMachineSpec defines the desired state of SAFMachine
 type SAFMachineSpec struct {
 	// +optional
-	ConnectionConfig map[string]string `json:"connection_config,omitempty,omitzero"`
+	ConnectionConfig map[string]string `json:"connectionConfig,omitempty,omitzero"`
 
-	ProvisionJob   JobTemplate `json:"provision_job"`
-	DeprovisionJob JobTemplate `json:"deprovision_job"`
+	ProvisionJob   JobTemplate `json:"provisionJob"`
+	DeprovisionJob JobTemplate `json:"deprovisionJob"`
 }
 
 type JobTemplate struct {

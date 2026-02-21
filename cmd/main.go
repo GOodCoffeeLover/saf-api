@@ -38,6 +38,7 @@ import (
 	infrastructurev1alpha1 "github.com/GoodCoffeeLover/saf-api/api/v1alpha1"
 	"github.com/GoodCoffeeLover/saf-api/internal/controller/safcluster"
 	"github.com/GoodCoffeeLover/saf-api/internal/controller/safmachine"
+	capv1beta2 "sigs.k8s.io/cluster-api/api/core/v1beta2"
 	// +kubebuilder:scaffold:imports
 )
 
@@ -50,6 +51,7 @@ func init() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
 
 	utilruntime.Must(infrastructurev1alpha1.AddToScheme(scheme))
+	utilruntime.Must(capv1beta2.AddToScheme(scheme))
 	// +kubebuilder:scaffold:scheme
 }
 

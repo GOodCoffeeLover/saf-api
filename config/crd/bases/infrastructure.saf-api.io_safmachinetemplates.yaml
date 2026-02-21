@@ -70,11 +70,11 @@ spec:
                   spec:
                     description: SAFMachineSpec defines the desired state of SAFMachine
                     properties:
-                      connection_config:
+                      connectionConfig:
                         additionalProperties:
                           type: string
                         type: object
-                      deprovision_job:
+                      deprovisionJob:
                         properties:
                           spec:
                             description: JobSpec describes how the job execution will
@@ -9228,7 +9228,7 @@ spec:
                         required:
                         - spec
                         type: object
-                      provision_job:
+                      provisionJob:
                         properties:
                           spec:
                             description: JobSpec describes how the job execution will
@@ -18383,8 +18383,8 @@ spec:
                         - spec
                         type: object
                     required:
-                    - deprovision_job
-                    - provision_job
+                    - deprovisionJob
+                    - provisionJob
                     type: object
                 required:
                 - spec
