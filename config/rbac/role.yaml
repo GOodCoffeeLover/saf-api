@@ -5,7 +5,7 @@ metadata:
   name: manager-role
 rules:
 - apiGroups:
-  - infrastructure.saf-api.io
+  - infrastructure.cluster.x-k8s.io
   resources:
   - safclusters
   - safmachines
@@ -18,14 +18,14 @@ rules:
   - update
   - watch
 - apiGroups:
-  - infrastructure.saf-api.io
+  - infrastructure.cluster.x-k8s.io
   resources:
   - safclusters/finalizers
   - safmachines/finalizers
   verbs:
   - update
 - apiGroups:
-  - infrastructure.saf-api.io
+  - infrastructure.cluster.x-k8s.io
   resources:
   - safclusters/status
   - safmachines/status

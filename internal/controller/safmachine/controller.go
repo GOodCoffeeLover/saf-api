@@ -27,6 +27,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
 	kerrors "k8s.io/apimachinery/pkg/util/errors"
+	"k8s.io/utils/ptr"
 	capv1beta2 "sigs.k8s.io/cluster-api/api/core/v1beta2"
 	"sigs.k8s.io/cluster-api/util"
 	"sigs.k8s.io/cluster-api/util/finalizers"
@@ -72,9 +73,9 @@ type scope struct {
 	deprovisionJob *batchv1.Job
 }
 
-// +kubebuilder:rbac:groups=infrastructure.saf-api.io,resources=safmachines,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=infrastructure.saf-api.io,resources=safmachines/status,verbs=get;update;patch
-// +kubebuilder:rbac:groups=infrastructure.saf-api.io,resources=safmachines/finalizers,verbs=update
+// +kubebuilder:rbac:groups=infrastructure.cluster.x-k8s.io,resources=safmachines,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=infrastructure.cluster.x-k8s.io,resources=safmachines/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=infrastructure.cluster.x-k8s.io,resources=safmachines/finalizers,verbs=update
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -228,6 +229,9 @@ func (r *Reconciler) createProvisionJob(ctx context.Context, s *scope) (ctrl.Res
 			MountPath: "/etc/bootstrap/",
 		})
 	}
+
+	provisionJob.Spec.Template.Spec.RestartPolicy = corev1.RestartPolicyNever
+	provisionJob.Spec.BackoffLimit = ptr.To[int32](1)
 
 	if err := controllerutil.SetControllerReference(s.safMachine, provisionJob, r.Scheme,
 		controllerutil.WithBlockOwnerDeletion(true)); err != nil {

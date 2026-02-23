@@ -16,7 +16,7 @@ limitations under the License.
 
 // Package v1alpha1 contains API Schema definitions for the infrastructure v1alpha1 API group.
 // +kubebuilder:object:generate=true
-// +groupName=infrastructure.saf-api.io
+// +groupName=infrastructure.cluster.x-k8s.io
 package v1alpha1
 
 import (
@@ -30,13 +30,13 @@ const (
 )
 
 const (
-	SAFMachineFinalizer = "infrastructure.saf-api.io/safmachine"
-	SAFClusterFinalizer = "infrastructure.saf-api.io/safcluster"
+	SAFMachineFinalizer = "infrastructure.cluster.x-k8s.io/safmachine"
+	SAFClusterFinalizer = "infrastructure.cluster.x-k8s.io/safcluster"
 )
 
 var (
 	// GroupVersion is group version used to register these objects.
-	GroupVersion = schema.GroupVersion{Group: "infrastructure.saf-api.io", Version: "v1alpha1"}
+	GroupVersion = schema.GroupVersion{Group: "infrastructure.cluster.x-k8s.io", Version: "v1alpha1"}
 
 	// SchemeBuilder is used to add go types to the GroupVersionKind scheme.
 	SchemeBuilder = &scheme.Builder{GroupVersion: GroupVersion}

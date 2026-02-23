@@ -3,7 +3,7 @@
 # and allow the plugins properly work.
 # More info: https://book.kubebuilder.io/reference/project-config.html
 cliVersion: 4.9.0
-domain: saf-api.io
+domain: cluster.x-k8s.io
 layout:
 - go.kubebuilder.io/v4
 projectName: saf-api
@@ -13,7 +13,7 @@ resources:
     crdVersion: v1
     namespaced: true
   controller: true
-  domain: saf-api.io
+  domain: cluster.x-k8s.io
   group: infrastructure
   kind: SAFCluster
   path: github.com/GoodCoffeeLover/saf-api/api/v1alpha1
@@ -21,7 +21,7 @@ resources:
 - api:
     crdVersion: v1
     namespaced: true
-  domain: saf-api.io
+  domain: cluster.x-k8s.io
   group: infrastructure
   kind: SAFClusterTemplate
   path: github.com/GoodCoffeeLover/saf-api/api/v1alpha1
@@ -30,7 +30,7 @@ resources:
     crdVersion: v1
     namespaced: true
   controller: true
-  domain: saf-api.io
+  domain: cluster.x-k8s.io
   group: infrastructure
   kind: SAFMachine
   path: github.com/GoodCoffeeLover/saf-api/api/v1alpha1
@@ -38,7 +38,7 @@ resources:
 - api:
     crdVersion: v1
     namespaced: true
-  domain: saf-api.io
+  domain: cluster.x-k8s.io
   group: infrastructure
   kind: SAFMachineTemplate
   path: github.com/GoodCoffeeLover/saf-api/api/v1alpha1

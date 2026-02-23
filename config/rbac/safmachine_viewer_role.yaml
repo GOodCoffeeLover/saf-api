@@ -1,7 +1,7 @@
 # This rule is not used by the project saf-api itself.
 # It is provided to allow the cluster admin to help manage permissions for users.
 #
-# Grants read-only access to infrastructure.saf-api.io resources.
+# Grants read-only access to infrastructure.cluster.x-k8s.io resources.
 # This role is intended for users who need visibility into these resources
 # without permissions to modify them. It is ideal for monitoring purposes and limited-access viewing.
 
@@ -14,7 +14,7 @@ metadata:
   name: safmachine-viewer-role
 rules:
 - apiGroups:
-  - infrastructure.saf-api.io
+  - infrastructure.cluster.x-k8s.io
   resources:
   - safmachines
   verbs:
@@ -22,7 +22,7 @@ rules:
   - list
   - watch
 - apiGroups:
-  - infrastructure.saf-api.io
+  - infrastructure.cluster.x-k8s.io
   resources:
   - safmachines/status
   verbs:

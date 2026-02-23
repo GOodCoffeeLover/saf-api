@@ -1,4 +1,4 @@
-apiVersion: infrastructure.saf-api.io/v1alpha1
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
 kind: SAFMachine
 metadata:
   labels:
@@ -13,7 +13,11 @@ spec:
           containers:
             - name: main
               image: ubuntu
-              command: ["cat", "/etc/bootstrap/data"]
+              command: 
+              - sh 
+              - -c 
+              - | 
+                cat /etc/bootstrap/data
   deprovisionJob: 
     spec:
       template:
@@ -21,7 +25,11 @@ spec:
           containers:
             - name: main
               image: ubuntu
-              command: ["cat", "/etc/bootstrap/data"]
+              command: 
+              - sh 
+              - -c 
+              - | 
+                cat /etc/bootstrap/data
 
 
 

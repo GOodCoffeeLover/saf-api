@@ -1,7 +1,7 @@
 # This rule is not used by the project saf-api itself.
 # It is provided to allow the cluster admin to help manage permissions for users.
 #
-# Grants full permissions ('*') over infrastructure.saf-api.io.
+# Grants full permissions ('*') over infrastructure.cluster.x-k8s.io.
 # This role is intended for users authorized to modify roles and bindings within the cluster,
 # enabling them to delegate specific permissions to other users or groups as needed.
 
@@ -14,13 +14,13 @@ metadata:
   name: safmachinetemplate-admin-role
 rules:
 - apiGroups:
-  - infrastructure.saf-api.io
+  - infrastructure.cluster.x-k8s.io
   resources:
   - safmachinetemplates
   verbs:
   - '*'
 - apiGroups:
-  - infrastructure.saf-api.io
+  - infrastructure.cluster.x-k8s.io
   resources:
   - safmachinetemplates/status
   verbs:

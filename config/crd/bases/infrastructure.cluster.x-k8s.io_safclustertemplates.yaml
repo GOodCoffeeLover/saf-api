@@ -4,9 +4,9 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.19.0
-  name: safclustertemplates.infrastructure.saf-api.io
+  name: safclustertemplates.infrastructure.cluster.x-k8s.io
 spec:
-  group: infrastructure.saf-api.io
+  group: infrastructure.cluster.x-k8s.io
   names:
     kind: SAFClusterTemplate
     listKind: SAFClusterTemplateList
